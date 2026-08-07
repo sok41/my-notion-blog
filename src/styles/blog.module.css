@@ -20,3 +20,37 @@
   padding: 0;
   border: 0;
 }
+/* --- 記事カードの区切りと背景 --- */
+.main div.post,
+div.post {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #E9E9E7;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+}
+
+/* --- アイキャッチ画像の大きさを制限 --- */
+.main div.post img,
+div.post img {
+  max-height: 200px !important;
+  width: 100% !important;
+  object-fit: cover !important;
+  border-radius: 6px;
+  margin: 0.8rem 0;
+}
+
+/* --- 左側カテゴリー（タグ）の横並び化 --- */
+.aside div.tag-list,
+div.tag-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.4rem !important;
+  padding: 0 !important;
+}
+
+.aside div.tag-list a,
+div.tag-list a {
+  display: inline-block !important;
+  margin: 0 !important;
+}

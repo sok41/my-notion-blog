@@ -1,4 +1,6 @@
 ---
+import Profile from '../../../components/Profile.astro' // パスは階層に合わせて調整（../../の場合もあります）
+
 import {
   getPostsByPage,
   getRankedPosts,
@@ -71,7 +73,10 @@ const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
   </div>
 
   <div slot="aside" class={styles.aside}>
-    <BlogPostsLink heading="Recommended" posts={rankedPosts} />
+    <!-- ★ここに Profile を配置！ -->
+    <Profile />
+    
+    <BlogPostsLink heading="Latest posts" posts={recentPosts} />
     <BlogTagsLink heading="Categories" tags={tags} />
   </div>
 </Layout>

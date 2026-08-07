@@ -1,0 +1,135 @@
+<!-- プロフィール欄 -->
+<!-- プロフィールカード -->
+<div class="profile-card">
+  <!-- ヘッダー背景画像 -->
+  <div class="profile-cover">
+    <img src="/cover.png" alt="Cover" />
+  </div>
+
+  <!-- アバター画像 -->
+  <div class="profile-avatar">
+    <img src="/avatar.png" alt="sok" />
+  </div>
+
+  <!-- プロフィール詳細 -->
+  <div class="profile-body">
+    <div class="profile-name">sok</div>
+    <p class="profile-bio">
+      IPアナリストの備忘録ブログ。Google Apps Script、Pythonでの業務自動化や、投資・ライフハックについて発信しています。
+    </p>
+
+    <!-- 詳しいプロフィールボタン -->
+    <a href="/about" class="profile-btn">詳しいプロフィール</a>
+
+    <!-- SNSリンク（X / Instagram） -->
+    <div class="profile-sns">
+      <!-- X (旧Twitter) -->
+      <a href="https://x.com/your_twitter_id" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <!-- Instagram -->
+      <a href="https://instagram.com/null_nor_0726" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.profile-card {
+  border: 1px solid #E9E9E7;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #FFFFFF;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* カバー画像 */
+.profile-cover {
+  height: 90px;
+  background-color: #F1F1EF;
+}
+.profile-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* アバター画像（カバーに被せる位置調整） */
+.profile-avatar {
+  margin-top: -40px;
+  display: flex;
+  justify-content: center;
+}
+.profile-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #FFFFFF;
+  object-fit: cover;
+  background-color: #FFFFFF;
+}
+
+/* テキスト情報 */
+.profile-body {
+  padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+}
+.profile-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #37352F;
+  margin-bottom: 0.5rem;
+}
+.profile-bio {
+  font-size: 0.82rem;
+  color: #787774;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* ピンクの丸角ボタン */
+.profile-btn {
+  display: inline-block;
+  background-color: #E91E63;
+  color: #FFFFFF !important;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  text-decoration: none !important;
+  box-shadow: 0 2px 4px rgba(233, 30, 99, 0.2);
+  transition: opacity 0.2s;
+  margin-bottom: 1.2rem;
+}
+.profile-btn:hover {
+  opacity: 0.85;
+}
+
+/* SNSアイコン */
+.profile-sns {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.profile-sns a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #D3D3D0;
+  border-radius: 50%;
+  color: #37352F;
+  transition: all 0.2s;
+  text-decoration: none !important;
+}
+.profile-sns a:hover {
+  border-color: #37352F;
+  background-color: #F7F6F3;
+}
+</style>
