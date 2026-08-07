@@ -33,9 +33,10 @@ export async function getStaticPaths() {
 
 const { page } = Astro.params
 
-const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
+const [posts, rankedPosts, recentPosts,tags, numberOfPages] = await Promise.all([
   getPostsByPage(parseInt(page, 10)),
   getRankedPosts(),
+  getPosts(5),
   getAllTags(),
   getNumberOfPages(),
 ])
@@ -75,7 +76,7 @@ const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
   <div slot="aside" class={styles.aside}>
     <!-- ★ここに Profile を配置！ -->
     <Profile />
-    
+
     <BlogPostsLink heading="Latest posts" posts={recentPosts} />
     <BlogTagsLink heading="Categories" tags={tags} />
   </div>
