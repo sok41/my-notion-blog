@@ -1,7 +1,6 @@
 ---
 import { Post } from '../lib/interfaces.ts'
 import { getNavLink, getPostLink } from '../lib/blog-helpers.ts'
-import PostTags from './PostTags.astro'
 
 export interface Props {
   prevPost: Post
@@ -12,71 +11,128 @@ const { prevPost, nextPost } = Astro.props
 ---
 
 <div class="post-relative-link">
-  <div>
-    {
-      nextPost && (
-        <a href={getPostLink(nextPost.Slug)} class="colored">
-          <div>◀︎ Next</div>
-          <div>{nextPost.Title}</div>
-          <PostTags post={nextPost} enableLink={false} />
-        </a>
-      )
-    }
+  <div class="nav-grid">
+    <div class="nav-item">
+      {
+        nextPost && (
+          <a href={getPostLink(nextPost.Slug)} class="colored">
+            <div class="nav-label">← Next</div>
+            <div class="nav-title">{nextPost.Title}</div>
+          </a>
+        )
+      }
+    </div>
+    <div class="nav-item">
+      {
+        prevPost && (
+          <a href={getPostLink(prevPost.Slug)} class="colored">
+            <div class="nav-label">Previous →</div>
+            <div class="nav-title">{prevPost.Title}</div>
+          </a>
+        )
+      }
+    </div>
   </div>
-  <div>
-    {
-      prevPost && (
-        <a href={getPostLink(prevPost.Slug)} class="colored">
-          <div>▶︎ Previous</div>
-          <div>{prevPost.Title}</div>
-          <PostTags post={prevPost} enableLink={false} />
-        </a>
-      )
-    }
-  </div>
-  <div>
-    <a href={getNavLink('/')} class="text">↑Top</a>
+
+  <div class="top-link-container">
+    <a href={getNavLink('/')} class="top-btn">
+      <span class="arrow">↑</span> Top
+    </a>
   </div>
 </div>
 
 <style>
-  div.post-relative-link {
-    margin-top: 1rem;
+  .post-relative-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f0f0f0;
   }
-  div.post-relative-link > div {
-    display: block;
-    margin-top: 0.6rem;
+
+  /* 2列レイアウト（レスポンシブ） */
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-  div.post-relative-link > div > a {
-    display: block;
-    text-align: center;
-    line-height: 1.2rem;
-    font-size: 0.95rem;
+
+  @media (min-width: 640px) {
+    .nav-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
-  div.post-relative-link > div > a.text {
-    margin-top: 1rem;
-    padding: 0.5rem;
+
+  .nav-item {
+    display: flex;
+  }
+
+  /* 前後記事カードの背景と枠線 */
+  .post-relative-link a.colored {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
     color: inherit;
-    font-size: 1rem;
-    text-decoration: underline;
-    font-weight: 500;
+    background-color: #f4f4f5; /* 明確な薄グレー背景 */
+    border: 1px solid #e4e4e7;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
   }
-  div.post-relative-link > div > a.colored {
-    padding: 1rem;
-    border-radius: var(--radius);
-    color: var(--fg);
-    background: rgba(227, 226, 224, 0.5);
+
+  /* ホバー時の挙動 */
+  .post-relative-link a.colored:hover {
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
   }
-  div.post-relative-link > div > a.colored > div:first-child {
-    width: auto;
-    text-align: left;
+
+  .nav-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #71717a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #18181b;
+    margin-top: 0.3rem;
+    line-height: 1.4;
+  }
+
+  /* Topへ戻るボタン */
+  .top-link-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .top-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
     font-size: 0.85rem;
+    font-weight: 600;
+    color: #52525b;
+    background-color: #f4f4f5;
+    border: 1px solid #e4e4e7;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
   }
-  div.post-relative-link > div > a.colored > div:nth-child(2) {
-    width: auto;
-    padding: 0.2rem 0 0.4rem;
-    text-align: left;
-    font-size: 1rem;
-    font-weight: bold;
+
+  .top-btn:hover {
+    background-color: #e4e4e7;
+    color: #09090b;
+    transform: translateY(-1px);
+  }
+
+  .arrow {
+    font-size: 0.9rem;
   }
 </style>

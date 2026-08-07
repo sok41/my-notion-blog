@@ -90,4 +90,62 @@ const { heading, posts } = Astro.props
     height: 1.25rem;
     vertical-align: sub;
   }
+
+.blog-posts-link {
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+/* 見出し：Notion風のグレー小見出し */
+.blog-posts-link h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 記事リスト */
+.blog-posts-link ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blog-posts-link li {
+  margin-bottom: 0.2rem;
+}
+
+/* 記事リンク：Notionのリストアイテム風ホバー効果 */
+.blog-posts-link a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.88rem;
+  color: #37352F;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.blog-posts-link a:hover {
+  background-color: #EFEEEB; /* Notion特有の柔らかいホバー背景 */
+  color: #000000;
+}
+
+/* コンテンツがない場合のメッセージ */
+.no-contents {
+  font-size: 0.85rem;
+  color: #9B9A97;
+  font-style: italic;
+  padding-left: 0.6rem;
+}
+
 </style>

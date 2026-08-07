@@ -497,11 +497,15 @@ export async function getDatabase(): Promise<Database> {
     }
   }
 
-  let cover: FileObject | null = null
+let cover: FileObject | null = null
   if (dataSource.cover) {
+    const coverObj = dataSource.cover as unknown as {
+      external?: { url: string }
+      file?: { url: string }
+    }
     cover = {
       Type: dataSource.cover.type,
-      Url: dataSource.cover.external?.url || dataSource.cover?.file?.url || '',
+      Url: coverObj.external?.url || coverObj.file?.url || '',
     }
   }
 

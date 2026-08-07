@@ -32,33 +32,59 @@ const { heading, tags } = Astro.props
 </div>
 
 <style>
-  .blog-tags-link {
-  }
-  .blog-tags-link h2 {
-    margin: 0;
-    padding-left: 0.4rem;
-    color: #777;
-    font-size: 0.95rem;
-  }
-  .blog-tags-link ul {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 0.3rem;
-    margin-block-end: 1rem;
-  }
-  .blog-tags-link ul li {
-    position: relative;
-    padding: 0.4rem;
-    line-height: 1.2rem;
-    font-size: 0.9rem;
-    gap: 6px;
-  }
-  .blog-tags-link ul li a {
-    min-width: 0;
-    border-radius: 3px;
-    padding: 2px 6px;
-    line-height: 1.2;
-    color: rgb(50, 48, 44);
-    background: rgba(227, 226, 224, 0.5);
-  }
+
+/* コンテナ全体の余白 */
+.blog-tags-link {
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+/* Notion風の見出し */
+.blog-tags-link h2 {
+  margin: 0 0 0.4rem 0;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #787774;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* タグ一覧のリスト（Flexboxで折り返し） */
+.blog-tags-link ul,
+.blog-tags-link div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.35rem; /* [上下 左右] のコンパクトな隙間 */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* リストアイテムの余白リセット */
+.blog-tags-link li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Notion風マルチセレクトタグ */
+.blog-tags-link a {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap; /* タグ内文字の改行防止 */
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+
+/* ホバー時の挙動 */
+.blog-tags-link a:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
 </style>
