@@ -34,9 +34,14 @@ const { prevPost, nextPost } = Astro.props
     </div>
   </div>
 
-  <div class="top-link-container">
-    <a href={getNavLink('/')} class="top-btn">
-      <span class="arrow">↑</span> Top
+  <!-- ホームへ戻るボタン -->
+  <div class="home-link-container">
+    <a href={getNavLink('/')} class="home-btn">
+      <svg class="home-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      Home
     </a>
   </div>
 </div>
@@ -104,14 +109,14 @@ const { prevPost, nextPost } = Astro.props
     line-height: 1.4;
   }
 
-  /* Topへ戻るボタン */
-  .top-link-container {
+  /* Homeボタン */
+  .home-link-container {
     display: flex;
     justify-content: center;
     margin-top: 2rem;
   }
 
-  .top-btn {
+  .home-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -126,13 +131,13 @@ const { prevPost, nextPost } = Astro.props
     transition: all 0.2s ease;
   }
 
-  .top-btn:hover {
+  .home-btn:hover {
     background-color: #e4e4e7;
     color: #09090b;
     transform: translateY(-1px);
   }
 
-  .arrow {
-    font-size: 0.9rem;
+  .home-icon {
+    display: block;
   }
 </style>
