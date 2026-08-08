@@ -1,5 +1,5 @@
 .main header {
-  padding: 0 0 20px;
+  padding: 0 0 10px;
 }
 .main footer {
   border-top: 1px dashed #888;
@@ -13,31 +13,41 @@
 }
 
 .post {
-  margin: 0 auto 40px;
+  margin: 0 auto 20px;
 }
 .post footer {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   padding: 0;
   border: 0;
 }
-/* --- 記事カードの区切りと背景 --- */
+
+/* --- 記事カードの区切りと背景（コンパクト化） --- */
 .main div.post,
 div.post {
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem 1.2rem;       /* 内側の余白を 1.5rem → 1rem に短縮 */
+  margin-bottom: 1rem;        /* カード同士の隙間を 2rem → 1rem に短縮 */
   border: 1px solid #E9E9E7;
   border-radius: 8px;
   background-color: #FFFFFF;
 }
 
+/* モバイル表示（スマホ）時の余白をさらに最適化 */
+@media (max-width: 640px) {
+  .main div.post,
+  div.post {
+    padding: 0.85rem 1rem;    /* スマホではさらに余白をギュッと凝縮 */
+    margin-bottom: 0.75rem;   /* カード間隔を狭めて件数を確保 */
+  }
+}
+
 /* --- アイキャッチ画像の大きさを制限 --- */
 .main div.post img,
 div.post img {
-  max-height: 200px !important;
+  max-height: 160px !important; /* スマホでも邪魔にならない高さに調整 */
   width: 100% !important;
   object-fit: cover !important;
   border-radius: 6px;
-  margin: 0.8rem 0;
+  margin: 0.5rem 0;
 }
 
 /* --- 左側カテゴリー（タグ）の横並び化 --- */
