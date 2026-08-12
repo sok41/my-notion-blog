@@ -51,4 +51,8 @@ export default defineConfig({
 
   adapter: vercel(), // ★ 追加
 
+  security: {
+    checkOrigin: false, // 内部APIへのPOSTリクエストでのOriginエラーを回避
+  },
+
 });

@@ -64,9 +64,20 @@ const { slug } = Astro.props
       const currentCount = parseInt(countEl.textContent || '0', 10)
       countEl.textContent = (currentCount + 1).toString()
 
-      // サーバーへ送信
+// サーバーへ送信
       try {
-        const res = await fetch(`/api/like/${slug}`, { method: 'POST' })
+        const res = await fetch(`/api/like/${slug}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        // 403や500などのエラーが返ってきた場合のハンドリング
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+
         const data = await res.json()
         if (data.count !== undefined) {
           countEl.textContent = data.count
