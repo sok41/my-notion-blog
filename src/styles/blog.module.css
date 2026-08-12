@@ -64,3 +64,82 @@ div.tag-list a {
   display: inline-block !important;
   margin: 0 !important;
 }
+
+/* ==========================================
+   記事本文（Font Size & Line Height）の調整
+   ========================================== */
+
+.post div.content,
+.post .body,
+.post p {
+  font-size: 0.95rem; /* PCでの本文サイズを少しだけ引き締め */
+  line-height: 1.75;
+  color: #37352f;     /* Notion風の目に優しいダークグレー */
+}
+
+@media (max-width: 640px) {
+  .post div.content,
+  .post .body,
+  .post p {
+    font-size: 0.9rem; /* スマホではさらに一回り小さく調整 */
+    line-height: 1.65;
+  }
+}
+
+/* 記事タイトルのサイズ調整 */
+.post h1,
+.post-title {
+  font-size: 1.4rem !important;
+  line-height: 1.35 !important;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .post h1,
+  .post-title {
+    font-size: 1.25rem !important; /* スマホでの記事タイトルをコンパクトに */
+  }
+}
+
+/* ==========================================
+   Notionライクな見出しデザイン（h2 / h3）
+   ========================================== */
+
+/* --- H2 見出し --- */
+.post h2 {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #111827;
+  margin-top: 1rem !important;
+  margin-bottom: 0.8rem !important;
+  padding-left: 0.65rem !important;
+  border-left: 4px solid #37352f !important; /* 青(#2563eb)からNotionカラー(#37352f)に変更 */
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 640px) {
+  .post h2 {
+    font-size: 1.1rem !important;
+    margin-top: 1.6rem !important;
+  }
+}
+
+/* --- H3 見出し --- */
+.post h3 {
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  color: #1f2937;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  padding-bottom: 0.25rem !important;
+  border-bottom: 1px solid #e5e7eb; /* スッキリした細い下線 */
+  line-height: 1.4 !important;
+}
+
+@media (max-width: 640px) {
+  .post h3 {
+    font-size: 0.95rem !important;
+    margin-top: 1.2rem !important;
+  }
+}   
