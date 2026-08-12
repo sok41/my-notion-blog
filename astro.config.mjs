@@ -6,6 +6,8 @@ import CustomIconDownloader from './src/integrations/custom-icon-downloader';
 import FeaturedImageDownloader from './src/integrations/featured-image-downloader';
 import PublicNotionCopier from './src/integrations/public-notion-copier';
 
+import vercel from '@astrojs/vercel'; // ★ 追加
+
 const getSite = function () {
   if (CUSTOM_DOMAIN) {
     return new URL(BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
@@ -36,6 +38,9 @@ const getSite = function () {
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
+
+  output: 'static', // ★★★ この1行を追加してください ★★★m
+
   integrations: [
     icon(),
     CoverImageDownloader(),
@@ -43,4 +48,7 @@ export default defineConfig({
     FeaturedImageDownloader(),
     PublicNotionCopier(),
   ],
+
+  adapter: vercel(), // ★ 追加
+
 });
