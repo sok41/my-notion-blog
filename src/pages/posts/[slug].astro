@@ -106,11 +106,13 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
 >
   <div slot="main" class={styles.main}>
     <div class={styles.post}>
+    <div class="post-meta">
       <PostDate post={post} />
       <PostTags post={post} />
+    </div>
       <PostTitle post={post} enableLink={false} />
       <PostBody blocks={blocks} />
-      <PostTags post={post} />
+      <!-- PostTags post={post} / -->
 
       <!-- ★ 本文の末尾にいいねボタンを追加 -->
       <LikeButton slug={post.Slug} />
@@ -137,4 +139,16 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
     <BlogPostsLink heading="Latest posts" posts={recentPosts} />
     <BlogTagsLink heading="Categories" tags={tags} />
   </div>
+
+<style>
+.post-meta {
+  display: flex;
+  align-items: center; /* 垂直方向の中央揃え */
+  gap: 0.75rem;       /* 日付とタグの間の余白（お好みで調整） */
+  margin-bottom: 0.5rem; /* 下のタイトルとの間隔 */
+}
+</style>
+
 </Layout>
+
+
