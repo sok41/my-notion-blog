@@ -7,6 +7,8 @@ import { isAmazonURL, isGitHubURL } from '../../lib/blog-helpers.ts'
 import GithubLinkPreview from './GitHubLinkPreview.astro'
 import * as interfaces from '../../lib/interfaces.ts'
 import Caption from './Caption.astro'
+import Amazon from './../AmazonCard.astro'
+import { extractAsin, getAmazonItemInfo } from '../../lib/amazon.ts'
 
 export interface Props {
   block: interfaces.Block
@@ -19,10 +21,19 @@ const urlString = (block.Bookmark || block.LinkPreview || block.Embed).Url
 
 let url: URL
 let metadata: Record<string, string>
+let amazonData = null
+
 try {
   url = new URL(urlString)
 
-  if (!isAmazonURL(url)) {
+  if (isAmazonURL(url)) {
+    // Amazon URLからASINを取得し、PA-API経由で商品情報を取得
+    const asin = extractAsin(url.toString())
+    if (asin) {
+      amazonData = await getAmazonItemInfo(asin)
+    }
+  } else {
+    // Amazon以外のURLの場合はメタ情報を取得
     const metascraper = createMetascraper([
       metascraperDescription(),
       metascraperImage(),
@@ -36,6 +47,9 @@ try {
 } catch (err) {
   console.log(err)
 }
+
+// キャプションのフォールバック用文字列
+const captionText = block.Bookmark?.Caption?.[0]?.PlainText
 ---
 
 {
@@ -44,9 +58,12 @@ try {
       {block.LinkPreview && isGitHubURL(new URL(block.LinkPreview.Url)) ? (
         <GithubLinkPreview url={url} />
       ) : isAmazonURL(url) ? (
-        <div class="no-metadata">
-          <a href={url.toString()}>{url.toString()}</a>
-        </div>
+        <Amazon 
+          url={amazonData?.url || url.toString()} 
+          title={amazonData?.title || captionText || "Amazonで見る"} 
+          imageUrl={amazonData?.imageUrl}
+          price={amazonData?.price}
+        />
       ) : (
         <div class="bookmark">
           <a href={url.toString()} target="_blank" rel="noopener noreferrer">
