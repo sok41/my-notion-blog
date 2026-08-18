@@ -18,23 +18,41 @@ const pages = Object.fromEntries(
 );
 
 // 3. ルーティングと画像生成の設定
-// ★ ここに await が必要です
 export const { getStaticPaths, GET } = await OGImageRoute({
   pages: pages,
+  
 
   getImageOptions: (_path, page: { title: string; description: string }) => ({
     title: page.title,
     description: page.description,
-    
-    // デザイン調整（ダークテーマ風）
-    bgGradient: [[24, 24, 27], [39, 39, 42]],
-    border: {
-      color: [255, 153, 0],
-      width: 12,
-      side: 'block-start',
+
+    // ★ 背景に cover.png を指定
+    // ※ public/cover.png はビルド時にルートに公開されるため、絶対パスや相対パスで読み込めます
+    bgImage: {
+  path: './public/cover.png',
+  fit: 'cover',
+},
+
+    // 余白（パディング）を広めに取り、文字を中央付近に収める
+    padding: 100,
+
+    font: {
+      title: {
+        size: 52,
+        families: ['Noto Sans JP'],
+        weight: 'Bold',
+        // 背景が写真の場合に読みやすいよう、濃い色（黒に近いグレー）に設定
+        color: [30, 30, 30],
+      },
+      description: {
+        size: 28,
+        families: ['Noto Sans JP'],
+        weight: 'Normal',
+        color: [80, 80, 80],
+      },
     },
-    
-    // 【重要】日本語フォントの設定（文字化け防止）
+
+    // 日本語フォントの設定
     fonts: [
       'https://api.fontsource.org/v1/fonts/noto-sans-jp/japanese-400-normal.ttf',
       'https://api.fontsource.org/v1/fonts/noto-sans-jp/japanese-700-normal.ttf',
