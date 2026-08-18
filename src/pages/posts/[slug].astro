@@ -13,6 +13,7 @@ import {
   getAllTags,
   getAllBlocksByBlockId,
   downloadFile,
+  getDatabase, // ★ getDatabase を追加インポート
 } from '../../lib/notion/client.ts'
 import {
   getPostLink,
@@ -92,10 +93,16 @@ const currentPostIndex = allPosts.findIndex((post) => post.Slug === slug)
 const prevPost = allPosts[currentPostIndex + 1]
 const nextPost = allPosts[currentPostIndex - 1]
 
-let ogImage = ''
-if (post.FeaturedImage && post.FeaturedImage.Url) {
-  ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site)
-}
+// --- ▼ OG画像とブログタイトルの取得部分を整理 ▼ ---
+const siteDomain = Astro.site ? Astro.site.toString() : Astro.url.origin
+
+// 動的OG画像の絶対URLを生成
+let ogImage = new URL(`/og/${slug}.png`, siteDomain).toString()
+
+// ブログ名（データベース名）を取得
+const database = await getDatabase()
+const blogTitle = database?.Title || ''
+
 ---
 
 <Layout
@@ -115,7 +122,7 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
       <!-- PostTags post={post} / -->
 
       <!-- ★ 本文の末尾にいいねボタンを追加 -->
-      <LikeButton slug={post.Slug} title={post.Title} />
+      <LikeButton slug={post.Slug} title={post.Title} blogTitle={blogTitle} />
 
       <footer>
         <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />

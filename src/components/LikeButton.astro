@@ -1,5 +1,6 @@
 ---
-import { getNavLink } from '../lib/blog-helpers.ts' // パスは適宜プロジェクトの構造に合わせて調整してください
+import { getNavLink } from '../../lib/blog-helpers.ts'
+import { getDatabase } from '../../lib/notion/client.ts'
 
 interface Props {
   slug: string
@@ -8,13 +9,17 @@ interface Props {
 
 const { slug, title } = Astro.props
 
-// 1. 本番のURL（astro.config.mjsのsite）を基準に絶対URLを生成
-// ※ Astro.site が未設定の場合はフォールバックとして Astro.url を使用
+// 1. データベース名（ブログ名）を取得
+const database = await getDatabase()
+const blogTitle = database?.Title || ''
+
+// 2. 本番URLの生成
 const siteDomain = Astro.site ? Astro.site.toString() : Astro.url.origin
 const pagePath = getNavLink(`/posts/${slug}`)
 const absoluteUrl = new URL(pagePath, siteDomain).toString()
 
-const tweetText = `${title}\n\n`
+// 3. ツイート文面を作成（最初に改行を入れ、タイトル | ブログ名 とする）
+const tweetText = `\n${title} | ${blogTitle}\n\n`
 const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(absoluteUrl)}`
 ---
 
