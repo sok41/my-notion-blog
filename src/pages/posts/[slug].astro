@@ -115,7 +115,7 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
       <!-- PostTags post={post} / -->
 
       <!-- ★ 本文の末尾にいいねボタンを追加 -->
-      <LikeButton slug={post.Slug} />
+      <LikeButton slug={post.Slug} title={post.Title} />
 
       <footer>
         <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />
