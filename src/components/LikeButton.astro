@@ -1,23 +1,28 @@
 ---
+import { getNavLink } from '../lib/blog-helpers.ts' // パスは適宜プロジェクトの構造に合わせて調整してください
+
 interface Props {
   slug: string
-  title: string // シェア時のツイートに記事タイトルを含めるため追加
+  title: string
 }
 
 const { slug, title } = Astro.props
 
-// 現在のページの絶対URLを生成
-const currentUrl = Astro.url.toString()
+// 1. 本番のURL（astro.config.mjsのsite）を基準に絶対URLを生成
+// ※ Astro.site が未設定の場合はフォールバックとして Astro.url を使用
+const siteDomain = Astro.site ? Astro.site.toString() : Astro.url.origin
+const pagePath = getNavLink(`/posts/${slug}`)
+const absoluteUrl = new URL(pagePath, siteDomain).toString()
+
 const tweetText = `${title}\n\n`
-const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(currentUrl)}`
+const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(absoluteUrl)}`
 ---
 
 <div class="like-container">
-  <!-- メッセージ文言の更新 -->
   <p class="like-message">この記事が良かったら「スキ」やシェアをしてもらえると励みになります！</p>
 
   <div class="action-buttons-wrapper">
-    <!-- 1. いいねボタンエリア -->
+    <!-- いいねボタンエリア -->
     <div class="like-button-wrapper" data-slug={slug}>
       <button id="like-btn" class="like-btn" aria-label="いいねボタン" disabled>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon">
@@ -27,7 +32,7 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
       </button>
     </div>
 
-    <!-- 2. X（Twitter）シェアボタン -->
+    <!-- X（Twitter）シェアボタン -->
     <a
       href={twitterShareUrl}
       target="_blank"
@@ -61,7 +66,6 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
       btn.classList.add('liked')
     }
 
-    // 初期いいね数の取得
     fetch(`/api/like/${slug}`)
       .then((res) => res.json())
       .then((data) => {
@@ -73,7 +77,6 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
         btn.disabled = false
       })
 
-    // クリック時の処理
     btn.addEventListener('click', async () => {
       if (isLiked) return
 
@@ -131,7 +134,6 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     text-align: center;
   }
 
-  /* ボタンを横並びにするラッパー */
   .action-buttons-wrapper {
     display: flex;
     justify-content: center;
@@ -145,7 +147,6 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     justify-content: center;
   }
 
-  /* いいねボタンのデザイン調整（高さをXボタンと合わせる） */
   .like-btn {
     display: inline-flex;
     align-items: center;
@@ -160,7 +161,7 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    height: 40px; /* 高さを統一 */
+    height: 40px;
   }
 
   .like-btn:hover:not(:disabled) {
@@ -189,7 +190,6 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     transform: scale(1.2);
   }
 
-  /* X（Twitter）シェアボタンのデザイン */
   .share-button-x {
     display: inline-flex;
     align-items: center;
@@ -204,7 +204,7 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     text-decoration: none;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    height: 40px; /* 高さを統一 */
+    height: 40px;
   }
 
   .share-button-x:hover {
