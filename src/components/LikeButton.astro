@@ -1,27 +1,49 @@
 ---
 interface Props {
   slug: string
+  title: string // シェア時のツイートに記事タイトルを含めるため追加
 }
 
-const { slug } = Astro.props
+const { slug, title } = Astro.props
+
+// 現在のページの絶対URLを生成
+const currentUrl = Astro.url.toString()
+const tweetText = `${title}\n\n`
+const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(currentUrl)}`
 ---
 
 <div class="like-container">
-  <!-- 1. メッセージ文言を追加 -->
-  <p class="like-message">この記事が良かったら「スキ」を押してもらえると励みになります！</p>
+  <!-- メッセージ文言の更新 -->
+  <p class="like-message">この記事が良かったら「スキ」やシェアをしてもらえると励みになります！</p>
 
-  <div class="like-button-wrapper" data-slug={slug}>
-    <button id="like-btn" class="like-btn" aria-label="いいねボタン" disabled>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon">
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+  <div class="action-buttons-wrapper">
+    <!-- 1. いいねボタンエリア -->
+    <div class="like-button-wrapper" data-slug={slug}>
+      <button id="like-btn" class="like-btn" aria-label="いいねボタン" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+        </svg>
+        <span id="like-count" class="like-count">-</span>
+      </button>
+    </div>
+
+    <!-- 2. X（Twitter）シェアボタン -->
+    <a
+      href={twitterShareUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="share-button-x"
+      aria-label="Xでシェアする"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="x-icon">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
       </svg>
-      <span id="like-count" class="like-count">-</span>
-    </button>
+      <span>ポストする</span>
+    </a>
   </div>
 </div>
 
 <script>
-  // 2. AstroのSPA遷移に対応するため astro:page-load または即時実行に変更
   const setupLikeButton = () => {
     const wrapper = document.querySelector('.like-button-wrapper') as HTMLElement
     if (!wrapper) return
@@ -35,28 +57,26 @@ const { slug } = Astro.props
     const storageKey = `liked_${slug}`
     let isLiked = localStorage.getItem(storageKey) === 'true'
 
-    // 見た目の初期状態を更新
     if (isLiked) {
       btn.classList.add('liked')
     }
 
-    // 1. 初期いいね数の取得
+    // 初期いいね数の取得
     fetch(`/api/like/${slug}`)
       .then((res) => res.json())
       .then((data) => {
         countEl.textContent = data.count ?? 0
-        btn.disabled = false // 読み込み完了後にボタンを有効化
+        btn.disabled = false
       })
       .catch(() => {
         countEl.textContent = '0'
         btn.disabled = false
       })
 
-    // 2. クリック時の処理（+1 加算）
+    // クリック時の処理
     btn.addEventListener('click', async () => {
-      if (isLiked) return // すでに押し済みの場合は何もしない（ガード）
+      if (isLiked) return
 
-      // UIを即座に更新（楽観的UI更新）
       isLiked = true
       localStorage.setItem(storageKey, 'true')
       btn.classList.add('liked')
@@ -64,7 +84,6 @@ const { slug } = Astro.props
       const currentCount = parseInt(countEl.textContent || '0', 10)
       countEl.textContent = (currentCount + 1).toString()
 
-// サーバーへ送信
       try {
         const res = await fetch(`/api/like/${slug}`, {
           method: 'POST',
@@ -73,7 +92,6 @@ const { slug } = Astro.props
           },
         })
 
-        // 403や500などのエラーが返ってきた場合のハンドリング
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
         }
@@ -88,9 +106,7 @@ const { slug } = Astro.props
     })
   }
 
-  // 初回読み込み・Astroページ遷移の両方に対応
   document.addEventListener('astro:page-load', setupLikeButton)
-  // View Transitionsを使用していない場合のための通常呼び出し
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupLikeButton)
   } else {
@@ -99,13 +115,12 @@ const { slug } = Astro.props
 </script>
 
 <style>
-  /* 3. 配置とメッセージのスタイル追加 */
   .like-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 1rem 0 1rem;
+    margin: 2rem 0 1.5rem;
     gap: 0.75rem;
   }
 
@@ -116,11 +131,21 @@ const { slug } = Astro.props
     text-align: center;
   }
 
+  /* ボタンを横並びにするラッパー */
+  .action-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   .like-button-wrapper {
     display: flex;
     justify-content: center;
   }
 
+  /* いいねボタンのデザイン調整（高さをXボタンと合わせる） */
   .like-btn {
     display: inline-flex;
     align-items: center;
@@ -135,6 +160,7 @@ const { slug } = Astro.props
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    height: 40px; /* 高さを統一 */
   }
 
   .like-btn:hover:not(:disabled) {
@@ -143,7 +169,6 @@ const { slug } = Astro.props
     transform: translateY(-1px);
   }
 
-  /* 押された後のスタイル */
   .like-btn.liked {
     background-color: #fef2f2;
     border-color: #fca5a5;
@@ -162,5 +187,34 @@ const { slug } = Astro.props
 
   .like-btn:active:not(.liked) .heart-icon {
     transform: scale(1.2);
+  }
+
+  /* X（Twitter）シェアボタンのデザイン */
+  .share-button-x {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: #000000;
+    border: 1px solid #000000;
+    border-radius: 9999px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    height: 40px; /* 高さを統一 */
+  }
+
+  .share-button-x:hover {
+    background-color: #27272a;
+    border-color: #27272a;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  .x-icon {
+    fill: currentColor;
   }
 </style>
