@@ -9,7 +9,7 @@ const pages = Object.fromEntries(
   posts
     .filter((post) => post.Slug) // ★ 小文字の slug ではなく大文字の Slug に修正
     .map((post) => [
-      post.Slug,
+      `${post.Slug}.png`, // ★ キーの末尾に .png を追加する
       {
         title: post.Title,
         description: 'sok41.log', // 任意の概要文
