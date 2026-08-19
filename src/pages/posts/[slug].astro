@@ -2,7 +2,6 @@
 import * as interfaces from '../../lib/interfaces.ts'
 import Profile from '../../components/Profile.astro'
 
-
 import {
   getPosts,
   getAllPosts,
@@ -13,7 +12,7 @@ import {
   getAllTags,
   getAllBlocksByBlockId,
   downloadFile,
-  getDatabase, // ★ getDatabase を追加インポート
+  getDatabase,
 } from '../../lib/notion/client.ts'
 import {
   getPostLink,
@@ -93,7 +92,6 @@ const currentPostIndex = allPosts.findIndex((post) => post.Slug === slug)
 const prevPost = allPosts[currentPostIndex + 1]
 const nextPost = allPosts[currentPostIndex - 1]
 
-// --- ▼ OG画像とブログタイトルの取得部分を整理 ▼ ---
 const siteDomain = Astro.site ? Astro.site.toString() : Astro.url.origin
 
 // 動的OG画像の絶対URLを生成
@@ -103,6 +101,36 @@ let ogImage = new URL(`/og/${slug}.png`, siteDomain).toString()
 const database = await getDatabase()
 const blogTitle = database?.Title || ''
 
+// --- ▼ 構造化データ (JSON-LD) 用の変数を定義 ▼ ---
+const postUrl = new URL(getPostLink(post.Slug), siteDomain).toString()
+const publishedTime = post.Date ? new Date(post.Date).toISOString() : new SDate().toISOString()
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.Title,
+  "description": post.Excerpt || blogTitle,
+  "image": ogImage,
+  "url": postUrl,
+  "datePublished": publishedTime,
+  "dateModified": publishedTime,
+  "author": {
+    "@type": "Person",
+    "name": "sok41"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": blogTitle || "My Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": new URL("/avatar.png", siteDomain).toString()
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": postUrl
+  }
+}
 ---
 
 <Layout
@@ -111,6 +139,9 @@ const blogTitle = database?.Title || ''
   path={getPostLink(post.Slug)}
   ogImage={ogImage}
 >
+  <!-- ★ 構造化データの埋め込み -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
   <div slot="main" class={styles.main}>
     <div class={styles.post}>
     <div class="post-meta">
@@ -119,9 +150,7 @@ const blogTitle = database?.Title || ''
     </div>
       <PostTitle post={post} enableLink={false} />
       <PostBody blocks={blocks} />
-      <!-- PostTags post={post} / -->
 
-      <!-- ★ 本文の末尾にいいねボタンを追加 -->
       <LikeButton slug={post.Slug} title={post.Title} blogTitle={blogTitle} />
 
       <footer>
@@ -132,17 +161,15 @@ const blogTitle = database?.Title || ''
 
   <div slot="aside" class="aside">
 
-    <!-- ★ ここで Profile コンポーネントを1回だけ呼び出す -->
     <Profile />
 
-    <!-- 同じカテゴリーの記事 -->
     <BlogPostsLink
       heading="Posts in the same category"
       posts={postsHavingSameTag.filter(
         (p: interfaces.Post) => p.Slug !== post.Slug
       )}
     />
-    
+     
     <BlogPostsLink heading="Latest posts" posts={recentPosts} />
     <BlogTagsLink heading="Categories" tags={tags} />
   </div>
@@ -150,12 +177,10 @@ const blogTitle = database?.Title || ''
 <style>
 .post-meta {
   display: flex;
-  align-items: center; /* 垂直方向の中央揃え */
-  gap: 0.75rem;       /* 日付とタグの間の余白（お好みで調整） */
-  margin-bottom: 0.5rem; /* 下のタイトルとの間隔 */
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 </style>
 
 </Layout>
-
-
