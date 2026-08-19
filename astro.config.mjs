@@ -1,5 +1,7 @@
+import 'dotenv/config'; // ★ 一番上に追加
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
+import sitemap from '@astrojs/sitemap'; // ★1. インポートを追加
 import { CUSTOM_DOMAIN, BASE_PATH } from './src/server-constants';
 import CoverImageDownloader from './src/integrations/cover-image-downloader';
 import CustomIconDownloader from './src/integrations/custom-icon-downloader';
@@ -43,6 +45,7 @@ export default defineConfig({
 
   integrations: [
     icon(),
+    sitemap(),
     CoverImageDownloader(),
     CustomIconDownloader(),
     FeaturedImageDownloader(),
