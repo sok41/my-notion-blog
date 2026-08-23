@@ -9,9 +9,16 @@ import type {
 } from './interfaces'
 import { pathJoin } from './utils'
 
+// HEIC/HEIF files (typically photos straight from an iPhone) can't be
+// rendered by most browsers, so downloadFile() converts them to JPEG at
+// build time. Keep the extension swap in one place so the URL generated
+// here always matches the filename actually written to disk.
+export const HEIC_EXTENSION_REGEX = /\.(heic|heif)$/i
+
 export const filePath = (url: URL): string => {
   const [dir, filename] = url.pathname.split('/').slice(-2)
-  return pathJoin(BASE_PATH, `/notion/${dir}/${filename}`)
+  const convertedFilename = filename.replace(HEIC_EXTENSION_REGEX, '.jpg')
+  return pathJoin(BASE_PATH, `/notion/${dir}/${convertedFilename}`)
 }
 
 export const extractTargetBlocks = (

@@ -1,6 +1,7 @@
 import { APIResponseError, Client } from '@notionhq/client'
 import retry from 'async-retry'
 import ExifTransformer from 'exif-be-gone'
+import heicConvert from 'heic-convert'
 import fs, { createWriteStream } from 'node:fs'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
@@ -11,6 +12,7 @@ import {
   NUMBER_OF_POSTS_PER_PAGE,
   REQUEST_TIMEOUT_MS,
 } from '../../server-constants'
+import { HEIC_EXTENSION_REGEX } from '../blog-helpers'
 import type {
   Annotation,
   Block,
@@ -423,7 +425,55 @@ export async function downloadFile(url: URL) {
     fs.mkdirSync(dir, { recursive: true })
   }
 
-  const filename = decodeURIComponent(url.pathname.split('/').slice(-1)[0])
+  const contentType = res.headers.get('content-type')
+  let filename = decodeURIComponent(url.pathname.split('/').slice(-1)[0])
+  const isHeic =
+    HEIC_EXTENSION_REGEX.test(filename) ||
+    contentType === 'image/heic' ||
+    contentType === 'image/heif'
+
+  // Most browsers can't render HEIC/HEIF (the default format for iPhone
+  // photos), even though Notion's own viewer can. Convert it to JPEG here
+  // so the file that ends up on the site is actually viewable.
+  if (isHeic) {
+    let inputBuffer: Buffer
+    try {
+      inputBuffer = Buffer.from(await res.arrayBuffer())
+    } catch (err) {
+      console.log(err)
+      return Promise.resolve()
+    }
+
+    let jpegBuffer: Uint8Array
+    try {
+      jpegBuffer = await heicConvert({
+        buffer: inputBuffer,
+        format: 'JPEG',
+        quality: 0.9,
+      })
+    } catch (err) {
+      console.log('Failed to convert HEIC/HEIF file: ', err)
+      return Promise.resolve()
+    }
+
+    filename = filename.replace(HEIC_EXTENSION_REGEX, '.jpg')
+    const filepath = `${dir}/${filename}`
+    const writeStream = createWriteStream(filepath)
+    const rotate = sharp().rotate()
+
+    try {
+      return await pipeline(
+        Readable.from(Buffer.from(jpegBuffer)).pipe(rotate),
+        new ExifTransformer(),
+        writeStream
+      )
+    } catch (err) {
+      console.log(err)
+      writeStream.end()
+      return Promise.resolve()
+    }
+  }
+
   const filepath = `${dir}/${filename}`
 
   const writeStream = createWriteStream(filepath)
@@ -431,7 +481,7 @@ export async function downloadFile(url: URL) {
 
   let stream = Readable.fromWeb(res.body as any) // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  if (res.headers.get('content-type') === 'image/jpeg') {
+  if (contentType === 'image/jpeg') {
     stream = stream.pipe(rotate)
   }
   try {
