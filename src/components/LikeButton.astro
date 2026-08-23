@@ -18,9 +18,18 @@ const siteDomain = Astro.site ? Astro.site.toString() : Astro.url.origin
 const pagePath = getNavLink(`/posts/${slug}`)
 const absoluteUrl = new URL(pagePath, siteDomain).toString()
 
+// Vercelがビルドごとに自動で注入するコミットSHA（追加設定不要）。
+// これをシェアURLにクエリとして付与することで、デプロイのたびに
+// シェアされるURLが変わり、Xのカードキャッシュ（一度取得に失敗すると
+// 古い状態のまま固定されてしまう）が原因で画像プレビューが表示され
+// なくなる問題を防ぐ。canonical/og:urlはクエリなしのままなのでSEOに
+// は影響しない。ローカル開発時（未設定）はクエリなしのURLになる。
+const buildVersion = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7)
+const shareUrl = buildVersion ? `${absoluteUrl}?v=${buildVersion}` : absoluteUrl
+
 // 3. ツイート文面を作成（最初に改行を入れ、タイトル | ブログ名 とする）
 const tweetText = `\n${title} | ${blogTitle}\n\n`
-const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(absoluteUrl)}`
+const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`
 ---
 
 <div class="like-container">
