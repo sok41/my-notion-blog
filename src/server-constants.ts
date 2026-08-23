@@ -14,4 +14,7 @@ export const REQUEST_TIMEOUT_MS = parseInt(
   import.meta.env.REQUEST_TIMEOUT_MS || '10000',
   10
 )
-export const ENABLE_LIGHTBOX = import.meta.env.ENABLE_LIGHTBOX
+// Default to enabled (click-to-zoom on images) unless explicitly disabled
+// via ENABLE_LIGHTBOX=false, so it works out of the box without needing an
+// extra environment variable set in Vercel.
+export const ENABLE_LIGHTBOX = import.meta.env.ENABLE_LIGHTBOX !== 'false'
