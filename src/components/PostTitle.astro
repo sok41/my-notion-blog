@@ -5,14 +5,19 @@ import { getPostLink } from '../lib/blog-helpers.ts'
 export interface Props {
   post: Post
   enableLink: boolean
+  // 個別記事ページ（そのページの主題を表す唯一の見出し）では 'h1' を
+  // 渡す。一覧・タグページなど複数記事を並べる場所では 'h2'（既定）
+  // のまま。CSSはクラス（.post-title）指定のため見た目は変わらない。
+  titleTag?: 'h1' | 'h2'
 }
 
-const { post, enableLink = true } = Astro.props
+const { post, enableLink = true, titleTag = 'h2' } = Astro.props
+const TitleTag = titleTag
 
 let title = post.Title
 ---
 
-<h2 class="post-title">
+<TitleTag class="post-title">
   {
     enableLink ? (
       <a href={getPostLink(post.Slug)}>
@@ -48,7 +53,7 @@ let title = post.Title
       </>
     )
   }
-</h2>
+</TitleTag>
 
 <style>
   .post-title {

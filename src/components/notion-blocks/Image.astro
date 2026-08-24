@@ -16,6 +16,12 @@ if (block.Image.External) {
 } else if (block.Image.File) {
   image = filePath(new URL(block.Image.File.Url))
 }
+
+// SEO/アクセシビリティ向上のため、Notion側で画像にキャプションが
+// 設定されていればそれをaltテキストとして使う。なければ従来通りの
+// 汎用テキストにフォールバックする。
+const captionText = block.Image.Caption?.[0]?.PlainText?.trim()
+const altText = captionText || 'Image in a image block'
 ---
 
 <figure class="image">
@@ -25,10 +31,10 @@ if (block.Image.External) {
         <div>
           {ENABLE_LIGHTBOX ? (
             <a data-fslightbox href={image} data-type="image">
-              <img src={image} alt="Image in a image block" loading="lazy" />
+              <img src={image} alt={altText} loading="lazy" />
             </a>
           ) : (
-            <img src={image} alt="Image in a image block" loading="lazy" />
+            <img src={image} alt={altText} loading="lazy" />
           )}
         </div>
         <Caption richTexts={block.Image.Caption} />
