@@ -138,6 +138,7 @@ const jsonLd = {
   description={post.Excerpt}
   path={getPostLink(post.Slug)}
   ogImage={ogImage}
+  siteTitleHeading={false}
 >
   <!-- ★ 構造化データの埋め込み -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
@@ -148,7 +149,7 @@ const jsonLd = {
       <PostDate post={post} />
       <PostTags post={post} />
     </div>
-      <PostTitle post={post} enableLink={false} />
+      <PostTitle post={post} enableLink={false} titleTag="h1" />
       <PostBody blocks={blocks} />
 
       <LikeButton slug={post.Slug} title={post.Title} blogTitle={blogTitle} />

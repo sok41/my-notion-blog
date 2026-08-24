@@ -16,15 +16,22 @@ export interface Props {
     title?: string
     description?: string
   }
+  // 個別記事ページなど、そのページ固有の見出し（記事タイトル等）を
+  // <h1> にしたい場合は false を渡す。サイトタイトルは <p> として
+  // 同じ見た目のまま描画される（見た目に影響なし）。
+  siteTitleHeading?: boolean
 }
 
-const { 
-  title = '', 
-  description = '', 
-  path = '/', 
+const {
+  title = '',
+  description = '',
+  path = '/',
   ogImage = '',
-  frontmatter 
+  frontmatter,
+  siteTitleHeading = true,
 } = Astro.props
+
+const SiteTitleTag = siteTitleHeading ? 'h1' : 'p'
 
 const database = await getDatabase()
 
@@ -64,7 +71,7 @@ if (database?.Icon && database.Icon.Type === 'file') {
 ---
 
 <!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#">
+<html lang="ja" prefix="og: https://ogp.me/ns#">
   <head>
     <meta name="google-site-verification" content="Uj20Hy9y8YOJWuY2jIujagbZRLXR-OVhFvRxE_YP9no" />
   <link rel="icon" type="image/png" href="/favicon.png" />
@@ -75,16 +82,24 @@ if (database?.Icon && database.Icon.Type === 'file') {
     <title>{siteTitle}</title>
     <meta name="description" content={siteDescription} />
     <link rel="canonical" href={siteURL} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={database?.Title}
+      href={new URL(getStaticFilePath('/feed'), Astro.site).toString()}
+    />
     <meta property="og:url" content={siteURL} />
     <meta property="og:title" content={siteTitle} />
 
     <meta property="og:description" content={siteDescription} />
     <meta property="og:site_name" content={database?.Title} />
     <meta property="og:image" content={ogImage || siteOGImage} />
+    <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:title" content={siteTitle} />
     <meta name="twitter:description" content={siteDescription} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage || siteOGImage} />
+    <slot name="head" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
@@ -110,7 +125,7 @@ if (database?.Icon && database.Icon.Type === 'file') {
         <main>
           <div class="content">
             <header>
-              <h1>
+              <SiteTitleTag class="site-title">
                 <a href={getNavLink('/')}>
                   {
                     database?.Icon && database.Icon.Type === 'emoji' ? (
@@ -137,7 +152,7 @@ if (database?.Icon && database.Icon.Type === 'file') {
                     )
                   }
                 </a>
-              </h1>
+              </SiteTitleTag>
               <div class="description">
                 {database?.Description}
               </div>
@@ -233,34 +248,41 @@ if (database?.Icon && database.Icon.Type === 'file') {
   main header {
     padding: 20px 0 20px;
   }
-  main header h1 {
+  main header .site-title {
+    margin: 0;
+    font-size: 2rem;
     font-weight: 700;
     color: #333;
   }
-  main header h1 a {
+  @media (max-width: 640px) {
+    main header .site-title {
+      font-size: 1.6rem;
+    }
+  }
+  main header .site-title a {
     display: block;
     color: inherit;
   }
-  main header h1 a:hover {
+  main header .site-title a:hover {
     color: inherit;
   }
-  main header h1 a span,
-  main header h1 a img {
+  main header .site-title a span,
+  main header .site-title a img {
     display: inline-block;
     font-size: 1.1em;
   }
-  main header h1 a span {
+  main header .site-title a span {
     margin-right: 0.3em;
     margin-left: -0.1rem;
   }
-  main header h1 a img {
+  main header .site-title a img {
     width: 1.2em;
     height: 1.2em;
     margin-right: 0.2em;
     margin-left: -0.3rem;
     vertical-align: sub;
   }
-  main header h1 a img.custom-icon {
+  main header .site-title a img.custom-icon {
     border-radius: var(--radius);
   }
 
