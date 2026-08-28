@@ -2,7 +2,7 @@
   padding: 0 0 10px;
 }
 .main footer {
-  border-top: 1px dashed #888;
+  border-top: 1px solid #dadad6;
   margin: 0 auto;
   padding: 40px 0 0;
 }
@@ -21,22 +21,27 @@
   border: 0;
 }
 
-/* --- 記事カードの区切りと背景（コンパクト化） --- */
+/* --- 記事リストの区切り（Blank Space: カードではなく罫線+余白） --- */
 .main div.post,
 div.post {
-  padding: 1rem 1.2rem;       /* 内側の余白を 1.5rem → 1rem に短縮 */
-  margin-bottom: 1rem;        /* カード同士の隙間を 2rem → 1rem に短縮 */
-  border: 1px solid #E9E9E7;
-  border-radius: 8px;
-  background-color: #FFFFFF;
+  padding: 1.75rem 0;
+  margin: 0;
+  border-top: 1px solid #dadad6;
+}
+.main div.post:first-of-type,
+div.post:first-of-type {
+  border-top: none;
+  padding-top: 0;
 }
 
-/* モバイル表示（スマホ）時の余白をさらに最適化 */
 @media (max-width: 640px) {
   .main div.post,
   div.post {
-    padding: 0.85rem 1rem;    /* スマホではさらに余白をギュッと凝縮 */
-    margin-bottom: 0.75rem;   /* カード間隔を狭めて件数を確保 */
+    padding: 1.35rem 0;
+  }
+  .main div.post:first-of-type,
+  div.post:first-of-type {
+    padding-top: 0;
   }
 }
 
@@ -72,74 +77,20 @@ div.tag-list a {
 .post div.content,
 .post .body,
 .post p {
-  font-size: 0.95rem; /* PCでの本文サイズを少しだけ引き締め */
-  line-height: 1.75;
-  color: #37352f;     /* Notion風の目に優しいダークグレー */
+  font-size: 0.98rem;
+  line-height: 1.95;
+  font-weight: 300;
+  color: #3c3c3a;
 }
 
 @media (max-width: 640px) {
   .post div.content,
   .post .body,
   .post p {
-    font-size: 0.9rem; /* スマホではさらに一回り小さく調整 */
-    line-height: 1.65;
+    font-size: 0.92rem;
+    line-height: 1.85;
   }
 }
 
-/* 記事タイトルのサイズ調整 */
-.post h1,
-.post-title {
-  font-size: 1.4rem !important;
-  line-height: 1.35 !important;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 640px) {
-  .post h1,
-  .post-title {
-    font-size: 1.25rem !important; /* スマホでの記事タイトルをコンパクトに */
-  }
-}
-
-/* ==========================================
-   Notionライクな見出しデザイン（h2 / h3）
-   ========================================== */
-
-/* --- H2 見出し --- */
-.post h2 {
-  font-size: 1.2rem !important;
-  font-weight: 700 !important;
-  color: #111827;
-  margin-top: 1rem !important;
-  margin-bottom: 0.8rem !important;
-  padding-left: 0.65rem !important;
-  border-left: 4px solid #37352f !important; /* 青(#2563eb)からNotionカラー(#37352f)に変更 */
-  line-height: 1.35 !important;
-}
-
-@media (max-width: 640px) {
-  .post h2 {
-    font-size: 1.1rem !important;
-    margin-top: 1.6rem !important;
-  }
-}
-
-/* --- H3 見出し --- */
-.post h3 {
-  font-size: 1.02rem !important;
-  font-weight: 600 !important;
-  color: #1f2937;
-  margin-top: 1rem !important;
-  margin-bottom: 0.5rem !important;
-  padding-bottom: 0.25rem !important;
-  border-bottom: 1px solid #e5e7eb; /* スッキリした細い下線 */
-  line-height: 1.4 !important;
-}
-
-@media (max-width: 640px) {
-  .post h3 {
-    font-size: 0.95rem !important;
-    margin-top: 1.2rem !important;
-  }
-}   
+/* 記事タイトル（h1/h2 = .post-title）と本文見出し（h3/h4/h5）の
+   デザインはそれぞれ PostTitle.astro / Heading1-3.astro に定義。 */

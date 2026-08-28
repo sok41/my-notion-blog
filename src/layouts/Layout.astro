@@ -4,8 +4,6 @@ import { getDatabase } from '../lib/notion/client.ts'
 import { getNavLink, getStaticFilePath, filePath } from '../lib/blog-helpers.ts'
 import '../styles/syntax-coloring.css'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
-import SearchModal from '../components/SearchModal.astro'
-import SearchButton from '../components/SearchButton.astro'
 
 export interface Props {
   title?: string
@@ -100,6 +98,12 @@ if (database?.Icon && database.Icon.Type === 'file') {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage || siteOGImage} />
     <slot name="head" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Big+Shoulders+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
@@ -159,26 +163,24 @@ if (database?.Icon && database.Icon.Type === 'file') {
             </header>
 
             <slot name="main" />
-
-            <footer>
-              <div>
-                <span>Powered by&nbsp;</span>
-                <a href="https://github.com/otoyo/astro-notion-blog"
-                  >astro-notion-blog</a
-                >
-              </div>
-            </footer>
           </div>
         </main>
 
         <aside>
-          <SearchButton />
           <slot name="aside" />
         </aside>
       </div>
+
+      <footer class="site-footer">
+        <div>
+          <span>Powered by&nbsp;</span>
+          <a href="https://github.com/otoyo/astro-notion-blog"
+            >astro-notion-blog</a
+          >
+        </div>
+      </footer>
     </div>
 
-    <SearchModal />
     {
       ENABLE_LIGHTBOX && (
         <script src={getStaticFilePath('/scripts/fslightbox.js')} />
@@ -250,13 +252,17 @@ if (database?.Icon && database.Icon.Type === 'file') {
   }
   main header .site-title {
     margin: 0;
-    font-size: 2rem;
+    font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+    font-size: 2.75rem;
     font-weight: 700;
-    color: #333;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--fg);
   }
   @media (max-width: 640px) {
     main header .site-title {
-      font-size: 1.6rem;
+      font-size: 2rem;
     }
   }
   main header .site-title a {
@@ -287,24 +293,29 @@ if (database?.Icon && database.Icon.Type === 'file') {
   }
 
   main header div.description {
-    padding: 0.3rem 0 0.6rem;
-    font-size: 0.95rem;
+    padding: 0.4rem 0 0.6rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--muted, #75756d);
   }
 
-  main footer {
-    margin: 30px 0 10px;
+  .site-footer {
+    margin: 0;
+    padding: 20px 0 30px;
+    border-top: 1px solid #dadad6;
     text-align: center;
     font-size: 0.75rem;
   }
   @media (max-width: 640px) {
-    main footer {
-      margin: 0 auto 30px;
+    .site-footer {
+      padding: 16px 0 28px;
     }
   }
-  main footer span {
+  .site-footer span {
     color: #777;
   }
-  main footer a {
+  .site-footer a {
     color: inherit;
     text-decoration: underline;
   }
@@ -318,7 +329,9 @@ if (database?.Icon && database.Icon.Type === 'file') {
     --gap-double: 2rem;
 
     --bg: #fff;
-    --fg: #333;
+    --fg: #1b1b1b;
+    --line: #dadad6;
+    --muted: #adada8;
     --accents-1: #666;
     --accents-2: #666;
     --accents-3: #666;
@@ -350,10 +363,11 @@ if (database?.Icon && database.Icon.Type === 'file') {
     min-height: 100vh;
     background: var(--bg);
     color: var(--fg);
-    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-      Helvetica, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
-      'Hiragino Sans GB', メイリオ, Meiryo, 'Apple Color Emoji', Arial,
-      sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: 'Noto Sans JP', ui-sans-serif, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Hiragino Sans',
+      'Hiragino Kaku Gothic ProN', 'Hiragino Sans GB', メイリオ, Meiryo,
+      'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji',
+      'Segoe UI Symbol';
 
     background-position: 0 0, 25px 25px;
     background-attachment: fixed;

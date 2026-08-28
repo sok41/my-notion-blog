@@ -30,21 +30,24 @@ const { post, enableLink = true } = Astro.props
 
 <style>
   .post-tags {
-    font-size: 0.9rem;
+    font-size: 0.74rem;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
   .post-tags a,
   .post-tags span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     flex-shrink: 1;
     min-width: 0;
-    border-radius: 3px;
-    padding: 2px 6px;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
     line-height: 1.2;
-    color: rgb(50, 48, 44);
-    background: rgba(227, 226, 224, 0.5);
+    letter-spacing: 0.02em;
+    transition: border-color 0.15s ease;
+  }
+  .post-tags a:hover {
+    border-color: #57564f;
   }
 </style>
