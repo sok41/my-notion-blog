@@ -46,7 +46,7 @@ const altText = captionText || 'Image in a image block'
 <style>
   .image {
     display: flex;
-    margin: 0.2rem auto 0;
+    margin: 0.9rem auto;
   }
   .image > div {
     margin: 0 auto;
@@ -55,12 +55,12 @@ const altText = captionText || 'Image in a image block'
   }
   .image > div > div img {
     display: block;
-    /* クリック前（ライトボックスを開く前）のプレビュー表示が小さい画像を
-       底上げする。画像自体の解像度が小さいと max-width だけでは大きく
-       ならないため、記事幅に対する最低幅を設けて約1.5倍相当まで拡大する。
-       もともと記事幅いっぱいに近いサイズの画像は max-width で従来通り。 */
+    /* 記事幅いっぱい(100%)まで広がると文章に対して大きすぎて見づらいため、
+       記事幅の70%を上限にする。クリック前（ライトボックスを開く前）の
+       プレビューが小さい画像は min-width で60%まで底上げしつつ、
+       max-width 70% を超えては広がらないようにする。 */
     min-width: 60%;
-    max-width: 100%;
+    max-width: 70%;
     height: auto;
   }
   .image > div > div a {
