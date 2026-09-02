@@ -55,7 +55,13 @@ const altText = captionText || 'Image in a image block'
   }
   .image > div > div img {
     display: block;
+    /* クリック前（ライトボックスを開く前）のプレビュー表示が小さい画像を
+       底上げする。画像自体の解像度が小さいと max-width だけでは大きく
+       ならないため、記事幅に対する最低幅を設けて約1.5倍相当まで拡大する。
+       もともと記事幅いっぱいに近いサイズの画像は max-width で従来通り。 */
+    min-width: 60%;
     max-width: 100%;
+    height: auto;
   }
   .image > div > div a {
     cursor: zoom-in;
