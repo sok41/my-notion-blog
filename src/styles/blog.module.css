@@ -45,16 +45,6 @@ div.post:first-of-type {
   }
 }
 
-/* --- アイキャッチ画像の大きさを制限 --- */
-.main div.post img,
-div.post img {
-  max-height: 160px !important; /* スマホでも邪魔にならない高さに調整 */
-  width: 100% !important;
-  object-fit: cover !important;
-  border-radius: 6px;
-  margin: 0.5rem 0;
-}
-
 /* --- 左側カテゴリー（タグ）の横並び化 --- */
 .aside div.tag-list,
 div.tag-list {
