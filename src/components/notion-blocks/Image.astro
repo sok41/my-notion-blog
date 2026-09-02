@@ -46,6 +46,7 @@ const altText = captionText || 'Image in a image block'
 <style>
   .image {
     display: flex;
+    justify-content: center;
     margin: 0.9rem auto;
   }
   .image > div {
@@ -58,10 +59,13 @@ const altText = captionText || 'Image in a image block'
     /* 記事幅いっぱい(100%)まで広がると文章に対して大きすぎて見づらいため、
        記事幅の70%を上限にする。クリック前（ライトボックスを開く前）の
        プレビューが小さい画像は min-width で60%まで底上げしつつ、
-       max-width 70% を超えては広がらないようにする。 */
+       max-width 70% を超えては広がらないようにする。
+       画像側の幅が%指定になったことで祖先divの中央寄せ(margin:auto)が
+       効かなくなるため、img自体にも中央寄せを指定しておく。 */
     min-width: 60%;
     max-width: 70%;
     height: auto;
+    margin: 0 auto;
   }
   .image > div > div a {
     cursor: zoom-in;
