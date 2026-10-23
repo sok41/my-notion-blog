@@ -29,7 +29,7 @@ import BlogPostsLink from '../../components/BlogPostsLink.astro'
 import BlogTagsLink from '../../components/BlogTagsLink.astro'
 import styles from '../../styles/blog.module.css'
 
-import LikeButton from '../../components/LikeButton.astro'
+import ShareButton from '../../components/ShareButton.astro'
 
 export async function getStaticPaths() {
   const posts = await getAllPosts()
@@ -152,7 +152,7 @@ const jsonLd = {
       <PostTitle post={post} enableLink={false} titleTag="h1" />
       <PostBody blocks={blocks} />
 
-      <LikeButton slug={post.Slug} title={post.Title} blogTitle={blogTitle} />
+      <ShareButton slug={post.Slug} title={post.Title} />
 
       <footer>
         <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />
