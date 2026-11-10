@@ -1147,6 +1147,25 @@ function _buildRichText(richTextObject: responses.RichTextObject): RichText {
         Id: richTextObject.mention.page.id,
       }
       mention.Page = reference
+    } else if (
+      richTextObject.mention.type === 'link_mention' &&
+      richTextObject.mention.link_mention
+    ) {
+      const linkMention = richTextObject.mention.link_mention
+      mention.Link = {
+        Href: linkMention.href,
+        Title: linkMention.title || richTextObject.plain_text || linkMention.href,
+        IconUrl: linkMention.icon_url,
+      }
+    } else if (
+      richTextObject.mention.type === 'link_preview' &&
+      richTextObject.mention.link_preview
+    ) {
+      const url = richTextObject.mention.link_preview.url
+      mention.Link = {
+        Href: url,
+        Title: richTextObject.plain_text || url,
+      }
     }
 
     richText.Mention = mention

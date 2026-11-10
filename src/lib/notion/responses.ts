@@ -103,6 +103,7 @@ interface Mention {
   database?: Reference
   date?: DateProperty
   link_preview?: LinkPreview
+  link_mention?: LinkMention
 }
 
 interface Reference {
@@ -117,6 +118,12 @@ interface DateProperty {
 
 interface LinkPreview {
   url: string
+}
+
+interface LinkMention {
+  href: string
+  title?: string
+  icon_url?: string
 }
 
 interface Equation {

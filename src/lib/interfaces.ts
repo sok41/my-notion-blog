@@ -261,6 +261,13 @@ export interface LinkToPage {
 export interface Mention {
   Type: string
   Page?: Reference
+  Link?: MentionLink
+}
+
+export interface MentionLink {
+  Href: string
+  Title: string
+  IconUrl?: string
 }
 
 export interface Reference {

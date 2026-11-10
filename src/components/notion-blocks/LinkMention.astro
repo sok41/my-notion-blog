@@ -1,0 +1,70 @@
+---
+import createMetascraper from 'metascraper'
+import metascraperTitle from 'metascraper-title'
+import { MentionLink } from '../../lib/interfaces.ts'
+import { buildURLToHTMLMap } from '../../lib/blog-helpers.ts'
+
+export interface Props {
+  link: MentionLink
+}
+
+const { link } = Astro.props
+
+// Notion の link_preview メンションは API から URL しか返ってこない
+// （Notion 上のタイトルやアイコンは Notion の連携機能が独自に付けている）。
+// そのためタイトルが取れていない場合は、ビルド時にリンク先の HTML から
+// タイトルとファビコンを取得して Notion に近い見た目で表示する。
+let title = link.Title
+let iconUrl = link.IconUrl
+
+if (!iconUrl || title === link.Href) {
+  try {
+    const url = new URL(link.Href)
+    const html = (await buildURLToHTMLMap([url]))[url.toString()]
+    if (html) {
+      if (title === link.Href) {
+        const metascraper = createMetascraper([metascraperTitle()])
+        const metadata = await metascraper({ html, url: url.toString() })
+        if (metadata.title) {
+          title = metadata.title
+        }
+      }
+      if (!iconUrl) {
+        const iconTag = html.match(/<link[^>]+rel=["'](?:shortcut )?icon["'][^>]*>/i)
+        const href = iconTag?.[0].match(/href=["']([^"']+)["']/i)?.[1]
+        iconUrl = new URL(href || '/favicon.ico', url).toString()
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+---
+
+<a href={link.Href} class="link-mention" target="_blank" rel="noopener noreferrer">
+  {
+    iconUrl && (
+      <img src={iconUrl} class="icon" alt="" loading="lazy" />
+    )
+  }
+  <span class="text">{title}</span>
+</a>
+
+<style>
+  a.link-mention {
+    display: inline;
+    color: var(--fg);
+  }
+  img.icon {
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.25em;
+    vertical-align: -0.15em;
+    border-radius: 2px;
+  }
+  span.text {
+    font-weight: 500;
+    text-decoration: underline;
+  }
+</style>

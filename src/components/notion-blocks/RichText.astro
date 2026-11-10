@@ -9,6 +9,7 @@ import Color from './annotations/Color.astro'
 import Code from './annotations/Code.astro'
 import Anchor from './annotations/Anchor.astro'
 import Mention from './Mention.astro'
+import LinkMention from './LinkMention.astro'
 import KatexStylesheet from '../KatexStylesheet.astro'
 
 export interface Props {
@@ -57,6 +58,9 @@ const { richText } = Astro.props
                             )}
                             {richText.Mention && richText.Mention.Page && (
                               <Mention pageId={richText.Mention.Page.Id} />
+                            )}
+                            {richText.Mention && richText.Mention.Link && (
+                              <LinkMention link={richText.Mention.Link} />
                             )}
                           </Bold>
                         }
