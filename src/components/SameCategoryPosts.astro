@@ -1,0 +1,70 @@
+---
+import { Post } from '../lib/interfaces.ts'
+import { getPostLink, getTagLink } from '../lib/blog-helpers.ts'
+
+export interface Props {
+  groups: { tagName: string; posts: Post[] }[]
+}
+
+const { groups } = Astro.props
+---
+
+{
+  groups.map(({ tagName, posts }) => (
+    <section class="same-category-posts">
+      <h2>
+        <a href={getTagLink(tagName)}>{tagName}</a> の記事
+      </h2>
+      <ul>
+        {posts.map((post: Post) => (
+          <li>
+            <a href={getPostLink(post.Slug)}>{post.Title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}
+
+<style>
+  .same-category-posts {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #71717a;
+    letter-spacing: 0.05em;
+  }
+
+  h2 a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  li a {
+    display: block;
+    padding: 0.6rem 0;
+    font-size: 0.95rem;
+    color: var(--fg);
+    line-height: 1.5;
+  }
+
+  li a:hover {
+    text-decoration: underline;
+  }
+</style>
