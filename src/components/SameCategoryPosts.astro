@@ -13,7 +13,7 @@ const { groups } = Astro.props
   groups.map(({ tagName, posts }) => (
     <section class="same-category-posts">
       <h2>
-        <a href={getTagLink(tagName)}>{tagName}</a> の記事
+        Posts in the same category
       </h2>
       <ul>
         {posts.map((post: Post) => (
